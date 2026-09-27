@@ -1,6 +1,5 @@
 # Curso-R
 
-
 # 1 Introdução
 
 ## 1.1. O R como uma calculadora
