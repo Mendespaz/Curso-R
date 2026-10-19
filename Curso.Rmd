@@ -28,10 +28,10 @@ No seu nível mais básico, o R funciona como uma calculadora. Podemos usá-lo p
 4 / 2
 
 # Multiplicação
-4 * 2 
+4 * 10 
 
 # Potência
-2 ^ 2
+2 ^ 3
 
 ```
 
@@ -43,11 +43,11 @@ Na maior parte do tempo, não queremos apenas calcular algo e perder o resultado
 
 ```{r}
 # Adição
-x = 2 + 2
-x
+x = 4
+x 
 # Divisão
 y <-  20 / 2
-y
+y 
 # Subtração
 x - y
 # Multiplicação
@@ -72,8 +72,9 @@ notas <- c(8.5, 6.0, 9.2, 3.7)
 
 ```{r}
 # Incorreto:
-aluno_exemplo <- Ana
-Ana <- 1
+# aluno_exemplo <- Ana
+# Ana <- 1
+
 # Correto:
 aluno_exemplo <- "Ana"
 
@@ -117,18 +118,18 @@ notas[2]
 ```
 
 ```{r}
-table(aprovado) # Conta quantos passaram e quantos reprovaram
-rev(alunos)     # Inverte a ordem da lista (Luiz, Carlos, Bruno, Ana)
+table(notas) # Conta quantos passaram e quantos reprovaram
 unique(idades)  # Mostra apenas os valores únicos sem repetição
-Tabela <- data.frame(alunos, idades, notas, aprovado)
+tabela <- data.frame(alunos, idades, notas, aprovado) # Cria uma "planilha"
+tabela
 ```
+
 
 ## 1.5. Explorando o Ambiente R
 
 ```{r}
 ls()
 rm("aprovado_num")
-Tabela$aprovado <- NULL
 ```
 
 ## 1.6. Automatizando com Lógica
@@ -149,17 +150,16 @@ Existem 6 operadores principais no R para comparar valores. Eles sempre vão te 
 
 ```{r}
 # Quem tirou EXATAMENTE 6.0?
-Tabela$notas == 6.0
+tabela$notas == 6.0
 
 # Quem tirou uma nota DIFERENTE de 6.0?
-notas != 6.0
+tabela$notas != 6.0
 
 # Quais alunos têm 20 anos ou menos?
-rm(idades)
-Tabela$idades <= 20
+tabela$idades <= 20
 
 # Perguntando ao R: Quais notas são maiores ou iguais a 6.0?
-notas >= 6.0
+tabela$notas >= 6.0
 ```
 
 ## 1.7. Operadores Lógicos: Juntando perguntas (E / OU)
@@ -173,13 +173,13 @@ Muitas vezes, precisamos fazer mais de uma pergunta ao mesmo tempo. Para isso, u
 ```{r}
 # &: O aluno tem menos de 20 anos e tirou nota maior que 8?
 # Só será TRUE se as duas coisas forem verdade.
-(idades < 20) & (notas > 8.0)
-alunos[(idades < 20) & (notas > 8.0)]
+(tabela$idades < 20) & (tabela$notas > 8.0)
+alunos[(tabela$idades < 20) & (tabela$notas > 8.0)]
 
 # OU (|): O aluno tem mais de 20 anos OU tirou nota maior que 8?
 # Será TRUE se pelo menos UMA das coisas for verdade.
-(idades < 20) | (notas > 8.0)
-sum((idades < 20) | (notas > 8.0))
+(tabela$idades < 20) | (tabela$notas > 8.0)
+sum((tabela$idades < 20) | (tabela$notas > 8.0))
 ```
 
 ### 1.8. Outras logicas de comandos
@@ -190,10 +190,11 @@ else (senão)
 ```{r}
 # Vamos checar a nota de apenas um aluno
 # O código dentro das chaves {} só vai rodar se a condição for TRUE
-if (notas[2] >= 6.0) {
-  print(paste("Parabéns", alunos[2], "você foi aprovado, pode curtir as férias!"))
+
+if (tabela$notas[2] >= 6.0) {
+  print(paste("Parabéns", tabela$alunos[2], "você foi aprovado, pode curtir as férias!"))
 } else {
-  print(paste("Infelizmente", alunos[2], "você reprovou, nos vemos ano que vem."))
+  print(paste("Infelizmente", tabela$alunos[2], "você reprovou, nos vemos ano que vem."))
 }
 ```
 
@@ -202,10 +203,10 @@ if (notas[2] >= 6.0) {
 ```{r}
 for (i in 1:4) {
   
-  if (notas[i] >= 6.0) {
-    print(paste("Parabéns", alunos[i], "você foi aprovado, pode curtir as férias."))
+  if (tabela$notas[i] >= 6.0) {
+    print(paste("Parabéns", tabela$alunos[i], "você foi aprovado, pode curtir as férias."))
   } else {
-    print(paste("Infelizmente", alunos[i], "você reprovou, nos vemos ano que vem."))
+    print(paste("Infelizmente", tabela$alunos[i], "você reprovou, nos vemos ano que vem."))
   }
   
 }
@@ -215,15 +216,7 @@ for (i in 1:4) {
 
 ```{r}
 # Criando a lista de situação automaticamente
-Tabela$resultado <- ifelse(Tabela$notas >= 6.0, "Aprovado", "Reprovado")
-
-Tabela$resultado
-
-
-  for (i in 1:4) {resultado[i] <- ifelse(Tabela$notas[i] >= 6.0, "Aprovado", "Reprovado")}
-
-# Vendo o resultado
-resultado
+ifelse(tabela$notas >= 6.0, "Aprovado", "Reprovado")
 ```
 
 # 2. Trabalhando com dados reais
@@ -236,7 +229,8 @@ Antes de fazer qualquer conta ou gráfico, a regra número um do analista de dad
 
 ```{r importacao-inspecao}
 getwd()
-library(readxl)
+#install.packages(readxl) #Comando para baixar pacote
+library(readxl) #Comando para chamar pacote já baixado
 
 Dados <- read_excel("Notas.xlsx")
 View(Dados)
@@ -244,30 +238,34 @@ View(Dados)
 O comando `View()` vai abrir a tabela em uma aba nova, como se fosse o Excel. Ao fazer isso pela primeira vez, notaremos que a primeira linha do arquivo veio bagunçada.
 
 ```{r}
-Dados <- read_excel("Notas.xlsx", skip = 1, col_names = TRUE)
-View(Dados)
-colnames(Dados) <- c("aluno", "mat_primeira", "mat_segunda", "mat_terceira")
+Dados <- read_excel("Notas.xlsx", skip = 2, col_names = c("aluno", "mat_primeira", "mat_segunda", "mat_terceira"), col_types = c("text", "numeric", "numeric", "numeric"))
 View(Dados)
 summary(Dados)
 Dados$mat_primeira <- as.numeric(Dados$mat_primeira)
 Dados$mat_segunda <- as.numeric(Dados$mat_segunda)
 Dados$mat_terceira <- as.numeric(Dados$mat_terceira)
-
 summary(Dados)
 Dados$mat_segunda[which.max(Dados$mat_segunda)] <- max(Dados$mat_segunda)/10
 summary(Dados)
+class(Dados$mat_primeira)
+
 ```
 
 ```{r}
 # 1. Extraindo as notas
-notas_maria <- as.numeric(Dados[Dados$aluno == "Maria", 2:4])
-
+notas_maria <- Dados[Dados$aluno == "Maria", 2:4]
+notas_maria
 # 2. Calculando a média
-media_maria <- mean(notas_maria, na.rm = TRUE)
+media_maria <- rowMeans(notas_maria)
+media_maria
+```
 
-# Imprimindo a média
-print(paste("A média da Maria foi:", round(media_maria, 2)))
+```{r}
+Dados$media_final <- rowMeans(Dados[, 2:4])
+```
 
+
+```{r}
 # 3. Plotando o gráfico novamente
 plot(notas_maria, 
      type = "b", pch = 19, col = "steelblue", ylim = c(0, 10), xaxt = "n",
@@ -321,7 +319,7 @@ plot(Dados$Media)
 # Evoluindo o gráfico de pontos
 plot(Dados$Media,
      main = "Desempenho Geral: Média Final por aluno",
-     xlab = "Número do aluno (Índice da Tabela)",
+     xlab = "Número do aluno (Índice da tabela)",
      ylab = "Média Final",
      pch = 19,               # Usa bolinhas preenchidas
      col = "blue",         # Cor dos pontos
@@ -334,9 +332,16 @@ abline(h = 6, col = "red")
 # 3. Exercício Prático Final
 
 ```{r}
-# Se a média for maior ou igual a 6.0, Aprovado. Senão, Reprovado.
-Dados$Situacao <- ifelse(Dados$Media >= 6.0, "Aprovado", "Reprovado")
+# Se a média for maior ou igual a 7.0, Aprovado. Senão, Reprovado.
+Dados$situacao <- ifelse(Dados$media_final >= 7, "aprovado", "reprovado")
 
+
+Dados$situacao <- NA
+
+for (i in 1:nrow(Dados)) {
+if(Dados$media_final[i] >= 7) {Dados$situacao[i] <- "aprovado"}
+  else{Dados$situacao[i] <-  "reprovado"}
+  }
 # Visualizando a tabela final completa!
 View(Dados)
 ```
@@ -350,13 +355,13 @@ Para o R fazer um gráfico disso, primeiro precisamos pedir para ele **contar** 
 
 ```{r contagem-simples}
 # Pedindo ao R para contar quantos alunos existem em cada situação
-table(Dados$Situacao)
+table(Dados$situacao)
 
 # Gráfico de barras
-barplot(table(Dados$Situacao))
+barplot(table(Dados$situacao))
 
 # Evoluindo o gráfico de barras
-barplot(table(Dados$Situacao),
+barplot(table(Dados$situacao),
         main = "Situação Final da Turma",
         ylab = "Número de alunos",
         col = c("green", "red"),
