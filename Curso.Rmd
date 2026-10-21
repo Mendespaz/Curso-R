@@ -94,14 +94,13 @@ Caça aos erros
 
 ```{r}
 # 1: Soma de numeros decimais 
-1,5 + 6,8
+#1,5 + 6,8
 
 # 2
 #notas_exercicio <- c(8.5, 6.0, 9.2, 3.7
 
 # 3
 #alunos_exercicio <- c(Ana, "Bruno")
-
 ```
 
 
@@ -195,6 +194,12 @@ sum((tabela$idades < 20) | (tabela$notas > 8.0))
 table((tabela$idades < 20) | (tabela$notas > 8.0))
 ```
 
+exercicio
+```{r}
+
+```
+
+
 ### 1.8. Outras logicas de comandos
 
 if (se)
@@ -204,7 +209,7 @@ else (senão)
 # Vamos checar a nota de apenas um aluno
 # O código dentro das chaves {} só vai rodar se a condição for TRUE
 
-if (tabela$notas[2] >= 6.0) {
+if (tabela$notas[2] >= 7.0) {
   print(paste("Parabéns", tabela$alunos[2], "você foi aprovado, pode curtir as férias!"))
 } else {
   print(paste("Infelizmente", tabela$alunos[2], "você reprovou, nos vemos ano que vem."))
@@ -321,20 +326,9 @@ abline(v = 7, col = "red", lwd = 2, lty = 2)
 
 ```{r}
 # Se a média for maior ou igual a 7.0, Aprovado. Senão, Reprovado.
+## Dica, use ifelse
 Dados$situacao <- ifelse(Dados$media_final >= 7, "aprovado", "reprovado")
 
-Dados$situacao <- NA
-
-for (i in 1:nrow(Dados)) {
-  if (Dados$media_final[i] >= 7) {
-    Dados$situacao[i] <- "aprovado"
-  }
-  else{
-    Dados$situacao[i] <-  "reprovado"
-  }
-}
-
-# Visualizando a tabela final completa!
 View(Dados)
 ```
 
@@ -351,13 +345,5 @@ table(Dados$situacao)
 # Gráfico de barras
 barplot(table(Dados$situacao))
 
-# Evoluindo o gráfico de barras
-barplot(table(Dados$situacao),
-        main = "Situação Final da Turma",
-        ylab = "Número de alunos",
-        col = c("green", "red"),
-        border = "black",
-        ylim = c(0,22))
 
-png("imagem.png", width = 800, height = 600)
 ```
